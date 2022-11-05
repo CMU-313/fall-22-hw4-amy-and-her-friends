@@ -4,6 +4,8 @@ import joblib
 import pandas as pd
 import numpy as np
 import os
+from __future__ import print_function # In python 2.7
+import sys
 
 def configure_routes(app):
 
@@ -32,10 +34,9 @@ def configure_routes(app):
         return jsonify(np.ndarray.item(prediction))
 
     @app.route('/batch')
-    def predictBatch():
+    def batch():
         # what's going to come in is "studentid1,studentid2"
-
-        bigstring = request.args['applicant_info']
+        bigstring = request.args.get('applicant_info')
         def comma_separated_params_to_list(param):
             result = []
             for val in param.split(','):
@@ -50,6 +51,7 @@ def configure_routes(app):
                     result.append(val)
             return result
 
+     
         perapplicant = comma_separated_params_to_list(bigstring)
 
         count = 0
