@@ -4,6 +4,7 @@ import joblib
 import pandas as pd
 import numpy as np
 import os
+import sys
 
 def configure_routes(app):
 
@@ -21,14 +22,34 @@ def configure_routes(app):
         age = request.args.get('age')
         absences = request.args.get('absences')
         health = request.args.get('health')
-        data = [[age], [health], [absences]]
+        studytime = request.args.get('studytime')
+
+        if health < 1 or health > 5:
+            result = "hi ur health parameter is outta bounds."
+            return result, 500
+        if absences < 0 or absences > 93:
+            result = "hi ur absences parameter is outta bounds."
+            return result, 500
+        if age < 15 or age > 22:
+            result = "hi ur age parameter is outta bounds."
+            return result, 500
+        if studytime < 0:
+            result = "hi ur health parameter is outta bounds."
+            return result, 500
+
+        data = [[age], [health], [absences], [studytime]]
         query_df = pd.DataFrame({
             'age': pd.Series(age),
             'health': pd.Series(health),
-            'absences': pd.Series(absences)
+            'absences': pd.Series(absences),
+            'studytime': pd.Series(studytime)
         })
-        query = pd.get_dummies(query_df)
-        prediction = clf.predict(query)
+        
+        # Converting the dataframe into a one-hot encoded dataframe.)
+        # query = pd.get_dummies(query_df)
+        prediction = clf.predict(query_df)
+        print(prediction)
+        sys.stdout.flush()
         return jsonify(np.ndarray.item(prediction))
 
     @app.route('/batch')
@@ -55,38 +76,39 @@ def configure_routes(app):
         count = 0
         for applicant in perapplicant:
             temps = underscore_separated_params_to_list(applicant)
+            if len(temps) > 4 or len(temps) < 4:
+                result = "hi you're passing in the wrong number of parameters."
+                return result, 500
+
             age = temps[0]
             absences = temps[1]
             health = temps[2]
-            data = [[age], [health], [absences]]
+            studytime = temps[3]
+
+            if health < 1 or health > 5:
+                result = "hi ur health parameter is outta bounds."
+                return result, 500
+            if absences < 0 or absences > 93:
+                result = "hi ur absences parameter is outta bounds."
+                return result, 500
+            if age < 15 or age > 22:
+                result = "hi ur age parameter is outta bounds."
+                return result, 500
+            if studytime < 0:
+                result = "hi ur health parameter is outta bounds."
+                return result, 500
+
+            data = [[age], [health], [absences], [studytime]]
             query_df = pd.DataFrame({
                 'age': pd.Series(age),
                 'health': pd.Series(health),
-                'absences': pd.Series(absences)
+                'absences': pd.Series(absences),
+                'studytime': pd.Series(studytime)
             })
+            
             query = pd.get_dummies(query_df)
             prediction = clf.predict(query)
             if np.ndarray.item(prediction) == 1:
                 count += 1
         return jsonify(count)
-
-        # request_data = {}
-        # params = request.args.getlist('status') or request.form.getlist('status')
-        # if len(params) == 1 and ',' in params[0]:
-        #     request_data['status'] = comma_separated_params_to_list(params[0])
-        # else:
-        #     request_data['status'] = params
-
-        # age = request.args.get('age')
-        # absences = request.args.get('absences')
-        # health = request.args.get('health')
-        # data = [[age], [health], [absences]]
-        # query_df = pd.DataFrame({
-        #     'age': pd.Series(age),
-        #     'health': pd.Series(health),
-        #     'absences': pd.Series(absences)
-        # })
-        # query = pd.get_dummies(query_df)
-        # prediction = clf.predict(query)
-        # return jsonify(np.asscalar(prediction))
 
