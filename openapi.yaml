@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  title: Amy and Friends' Microservice
+  description: |-
+    This API allows us to gather predictions of which applicants are more likely to succeed.
+
+  version: 1.0.11
+
+tags:
+  - name: predict
+    description: Prediction of success score of applicant
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+  - name: batch
+    description: Prediction of success scores of group of applicants
+
+
+paths:
+  /predict:
+    get:
+      tags:
+        - predict
+      summary: Finds prediction for specific applicant
+      description: Multiple fields can be provided with comma separated strings
+      operationId: findPredictionByApplicant
+      parameters:
+        - name: age
+          in: query
+          description: age of applicant
+          required: true
+          explode: false
+          schema:
+            type: string
+        - name: absence
+          in: query
+          description: number of absences of applicant
+          required: true
+          explode: false
+          schema:
+            type: string
+        - name: health
+          in: query
+          description: health of applicant
+          required: true
+          explode: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+                items:
+                  $ref: '#/components/schemas/Predict'          
+            application/xml:
+              schema:
+                type: string
+                items:
+                  $ref: '#/components/schemas/Predict'
+        '400':
+          description: Invalid status value
+
+            
+            
+            
+  /batch:
+    get:
+      tags:
+        - batch
+      summary: Finds number of success predictions of group of applicants 
+      description: Multiple ids can be provided with comma separated strings. For example, query "age1_absence1_health1, age2_absence2_health2" to get the predictions of the following 
+      operationId: countSuccesses
+      parameters:
+        - name: applicants_info
+          in: query
+          description: List of applicants information (age, absence, health)
+          required: true
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Batch'          
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Batch'
+        '400':
+          description: Invalid tag value
+
+
+
+
+components:
+  schemas:
+    Predict:
+      required:
+        - predict_value
+      type: object
+      properties:
+        predict_value:
+          type: string
+          example: "1"
+      xml:
+        name: predict
+    Batch:
+      required:
+        - success_count
+      type: object
+      properties:
+        success_count:
+            type: string
+            example: "22"
+      xml:
+        name: batch
+        
+
+
+
+
+
+
+
+ 
+
