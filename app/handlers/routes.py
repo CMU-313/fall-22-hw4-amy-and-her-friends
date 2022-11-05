@@ -4,8 +4,6 @@ import joblib
 import pandas as pd
 import numpy as np
 import os
-from __future__ import print_function # In python 2.7
-import sys
 
 def configure_routes(app):
 
