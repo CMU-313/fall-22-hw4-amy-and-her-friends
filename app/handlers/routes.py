@@ -24,16 +24,16 @@ def configure_routes(app):
         health = request.args.get('health')
         studytime = request.args.get('studytime')
 
-        if health < 1 or health > 5:
+        if int(health) < 1 or int(health) > 5:
             result = "hi ur health parameter is outta bounds."
             return result, 500
-        if absences < 0 or absences > 93:
+        if int(absences) < 0 or int(absences) > 93:
             result = "hi ur absences parameter is outta bounds."
             return result, 500
-        if age < 15 or age > 22:
+        if int(age) < 15 or int(age) > 22:
             result = "hi ur age parameter is outta bounds."
             return result, 500
-        if studytime < 0:
+        if int(studytime) < 0:
             result = "hi ur health parameter is outta bounds."
             return result, 500
 
@@ -46,8 +46,8 @@ def configure_routes(app):
         })
         
         # Converting the dataframe into a one-hot encoded dataframe.)
-        # query = pd.get_dummies(query_df)
-        prediction = clf.predict(query_df)
+        query = pd.get_dummies(query_df)
+        prediction = clf.predict(query)
         print(prediction)
         sys.stdout.flush()
         return jsonify(np.ndarray.item(prediction))
@@ -69,7 +69,6 @@ def configure_routes(app):
                 if val:
                     result.append(val)
             return result
-
      
         perapplicant = comma_separated_params_to_list(bigstring)
 
@@ -85,16 +84,16 @@ def configure_routes(app):
             health = temps[2]
             studytime = temps[3]
 
-            if health < 1 or health > 5:
+            if int(health) < 1 or int(health) > 5:
                 result = "hi ur health parameter is outta bounds."
                 return result, 500
-            if absences < 0 or absences > 93:
+            if int(absences) < 0 or int(absences) > 93:
                 result = "hi ur absences parameter is outta bounds."
                 return result, 500
-            if age < 15 or age > 22:
+            if int(age) < 15 or int(age) > 22:
                 result = "hi ur age parameter is outta bounds."
                 return result, 500
-            if studytime < 0:
+            if int(studytime) < 0:
                 result = "hi ur health parameter is outta bounds."
                 return result, 500
 
@@ -105,7 +104,6 @@ def configure_routes(app):
                 'absences': pd.Series(absences),
                 'studytime': pd.Series(studytime)
             })
-            
             query = pd.get_dummies(query_df)
             prediction = clf.predict(query)
             if np.ndarray.item(prediction) == 1:

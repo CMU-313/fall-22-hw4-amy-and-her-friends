@@ -21,12 +21,12 @@ def test_batch_success():
     configure_routes(app)
     client = app.test_client()
     # Values will be taking a parameter string with _ as sep. variables and , as sep. students
-    url = '/batch?applicant_info=18_19_3,20_10_4'
+    url = '/batch?applicant_info=18_19_3_4,20_10_4_1'
 
     response = client.get(url)
 
     assert response.status_code == 200
-    assert response.get_data() == b'2\n'
+    assert response.get_data() == b'0\n'
 
 def test_batch_failed_no_students():
     app = Flask(__name__)
@@ -45,24 +45,24 @@ def test_batch_failed_incorrect_bounds():
     configure_routes(app)
     client = app.test_client()
     # Values will be taking a parameter string with _ as sep. variables and , as sep. students
-    url = '/batch?applicant_info=18_19_3_,20_10000_4'
+    url = '/batch?applicant_info=18_19_3_300,20_10000_4_34'
 
     response = client.get(url)
 
     assert response.status_code == 500
-    assert response.get_data() == b'\n'
+    assert response.get_data() == b'hi ur absences parameter is outta bounds.'
 
 def test_batch_failed_too_many_params():
     app = Flask(__name__)
     configure_routes(app)
     client = app.test_client()
     # Values will be taking a parameter string with _ as sep. variables and , as sep. students
-    url = '/batch?applicant_info=18_19_3,20_10_4_10'
+    url = '/batch?applicant_info=18_19_3,20_10_4_10_9'
 
     response = client.get(url)
 
     assert response.status_code == 500
-    assert response.get_data() == b'\n'
+    assert response.get_data() == b"hi you're passing in the wrong number of parameters."
 
 def test_batch_failed_not_enough_params():
     app = Flask(__name__)
@@ -74,15 +74,16 @@ def test_batch_failed_not_enough_params():
     response = client.get(url)
 
     assert response.status_code == 500
+    assert response.get_data() == b"hi you're passing in the wrong number of parameters."
 
 def test_batch_one_student():
     app = Flask(__name__)
     configure_routes(app)
     client = app.test_client()
     # Values will be taking a parameter string with _ as sep. variables and , as sep. students
-    url = '/batch?applicant_info=18_19_3'
+    url = '/batch?applicant_info=18_19_3_3'
 
     response = client.get(url)
 
     assert response.status_code == 200
-    assert response.get_data() == b'1\n'
+    assert response.get_data() == b'0\n'
