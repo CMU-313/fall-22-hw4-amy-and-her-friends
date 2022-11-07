@@ -19,22 +19,22 @@ def configure_routes(app):
     @app.route('/predict')
     def predict():
         #use entries from the query string here but could also use json
-        age = request.args.get('age')
-        absences = request.args.get('absences')
-        health = request.args.get('health')
-        studytime = request.args.get('studytime')
+        age = int(request.args.get('age'))
+        absences = int(request.args.get('absences'))
+        health = int(request.args.get('health'))
+        studytime = int(request.args.get('studytime'))
 
         if int(health) < 1 or int(health) > 5:
-            result = "hi ur health parameter is outta bounds."
+            result = "hi your health parameter is outta bounds."
             return result, 500
         if int(absences) < 0 or int(absences) > 93:
-            result = "hi ur absences parameter is outta bounds."
+            result = "hi your absences parameter is outta bounds."
             return result, 500
         if int(age) < 15 or int(age) > 22:
-            result = "hi ur age parameter is outta bounds."
+            result = "hi your age parameter is outta bounds."
             return result, 500
         if int(studytime) < 0:
-            result = "hi ur health parameter is outta bounds."
+            result = "hi your health parameter is outta bounds."
             return result, 500
 
         data = [[age], [health], [absences], [studytime]]
@@ -85,16 +85,16 @@ def configure_routes(app):
             studytime = temps[3]
 
             if int(health) < 1 or int(health) > 5:
-                result = "hi ur health parameter is outta bounds."
+                result = "hi your health parameter is outta bounds."
                 return result, 500
             if int(absences) < 0 or int(absences) > 93:
-                result = "hi ur absences parameter is outta bounds."
+                result = "hi your absences parameter is outta bounds."
                 return result, 500
             if int(age) < 15 or int(age) > 22:
-                result = "hi ur age parameter is outta bounds."
+                result = "hi your age parameter is outta bounds."
                 return result, 500
             if int(studytime) < 0:
-                result = "hi ur health parameter is outta bounds."
+                result = "hi your health parameter is outta bounds."
                 return result, 500
 
             data = [[age], [health], [absences], [studytime]]
