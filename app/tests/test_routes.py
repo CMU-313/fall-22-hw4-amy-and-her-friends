@@ -50,7 +50,7 @@ def test_batch_failed_incorrect_bounds():
     response = client.get(url)
 
     assert response.status_code == 500
-    assert response.get_data() == b'hi ur absences parameter is outta bounds.'
+    assert response.get_data() == b'hi your absences parameter is outta bounds.'
 
 def test_batch_failed_too_many_params():
     app = Flask(__name__)
